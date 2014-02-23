@@ -1,12 +1,15 @@
-% function [mask] = nmfSegmentation(image)
+images = loadData('images','tif');
+gts = loadData('gts','tif');
 
-addpath('C:\Users\Eliezer\Dropbox\Pesquisa\Evidences\ompbox10');
-addpath('C:\Users\Eliezer\Dropbox\Pesquisa\Evidences\ksvdbox13');
+accuracy = zeros(1,numel(images));
+
+for k = 1:numel(images)
 %%
    
-    [M, N, dim] = size(image);
-
-    img = double(image);
+    img = images{k};
+    gt = gts{k};
+    
+    [M, N, dim] = size(img);
     
     r = imageNormalize(img(:,:,1));
     g = imageNormalize(img(:,:,2));
@@ -75,7 +78,7 @@ addpath('C:\Users\Eliezer\Dropbox\Pesquisa\Evidences\ksvdbox13');
     
     [D, X] = nnmf(Y,K); % decomposing: Y in D*X
         
-    [invDD, XX] = informationTheoretic(Y, C, D, X, K, 10);
+    [invDD, XX] = informationTheoretic(Y, D, X, K, 10);
     DD = pinv(invDD);
    
     % multiDimPlot(XX,C);
@@ -108,4 +111,8 @@ addpath('C:\Users\Eliezer\Dropbox\Pesquisa\Evidences\ksvdbox13');
     
     mask = im2bw(mask);
 
+    accuracy(k) = sum(sum(mask == gt))/numel(mask);
+    
     figure, imshow(mask);
+    
+end;

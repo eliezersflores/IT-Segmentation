@@ -26,7 +26,7 @@ for k = 1:N
     
     gt = gts{k};
     
-    figure, subplot(1,2,1); imshow(mask); 
+    figure, subplot(1,2,1); imshow(mask); title(num2str(k));
             subplot(1,2,2); imshow(gt); 
     pause(1); close all;
     
